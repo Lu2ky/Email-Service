@@ -10,11 +10,11 @@ use rocket::serde::{Deserialize, Serialize, json::Json};
 #[serde(crate = "rocket::serde")]
 struct Email {
     user: String,
-    HoraInicio: String,
-    HoraFinal: String,
+    horaInicio: String,
+    horaFinal: String,
     dia: u8,
-    Destinatario: String,
-    Activivdad: String
+    destinatario: String,
+    actividad: String
 }
 #[derive(Serialize)]
 #[serde(crate = "rocket::serde")]
@@ -24,14 +24,16 @@ struct ApiResponse {
 
 #[launch]
 fn rocket() -> _ {
-    dotenv::from_path("./../../config/rustEmailServiceconfig.env").expect("Error cargando variables de entorno");
+
+    //dotenv::from_path("./../../../config/rustEmailServiceconfig.env").expect("Error cargando variables de entorno");  // <----- Custom ruta / local
+    dotenv::dotenv().ok();  // <----- Producción
     rocket::build()
         .mount("/api", routes![send_email])
 }
 #[post("/sendEmail", data = "<email>")]
 fn send_email(email: Json<Email>) -> Result<Json<ApiResponse>, Json<ApiResponse>> {
 
-    let dia = match email.dia {
+    let dia = match email.0.dia {
         1 => "lunes",
         2 => "martes",
         3 => "miercoles",
@@ -45,22 +47,19 @@ fn send_email(email: Json<Email>) -> Result<Json<ApiResponse>, Json<ApiResponse>
             }))
         }
     };
-
+    let url = "http://proyectointegrador.playit.plus/";
     let messagetosend = format!(
-        "Hola {}, desde la página de UPB Planner queremos recordarte que ya casi se acerca la fecha límite de tu actividad: {}, 
-        esta fue programad@ con una fecha de vencimiento: {} a las {}. 
-        Si necesitas revisarlo en detalle no olvides visitar la página oficial de UPB Planner, tu aliado de confianza en la U: {}.
-        ",  
-        email.user,
-        email.Activivdad,
+        "Hola {}, desde la página de UPB Planner queremos recordarte que ya casi se acerca la fecha límite de tu actividad: {}, esta fue programad@ con una fecha de vencimiento: {} a las {}. Si necesitas revisarlo en detalle no olvides visitar la página oficial de UPB Planner, tu aliado de confianza en la U: {}.",  
+        email.0.user,
+        email.0.actividad,
         dia,
-        email.HoraFinal,
-        "http://proyectointegrador.playit.plus/"
+        email.0.horaFinal,
+        url
     );
 
     let emailsend = Message::builder()
         .from("UPB Planner recordatorio <upbplanner@gmail.com>".parse().unwrap())
-        .to(email.Destinatario.parse().unwrap())
+        .to(email.destinatario.parse().unwrap())
         .subject("Recordatorio")
         .header(ContentType::TEXT_PLAIN)
         .body(messagetosend)
