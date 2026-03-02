@@ -47,13 +47,15 @@ fn send_email(email: Json<Email>) -> Result<Json<ApiResponse>, Json<ApiResponse>
     };
 
     let messagetosend = format!(
-        "Hola querid@ {}, esperamos que estes muy bien. \
-        Recuerda que tienes {} y empieza a las {} y termina a las {} el dia {}.",
+        "Hola {}, desde la página de UPB Planner queremos recordarte que ya casi se acerca la fecha límite de tu actividad: {}, 
+        esta fue programad@ con una fecha de vencimiento: {} a las {}. 
+        Si necesitas revisarlo en detalle no olvides visitar la página oficial de UPB Planner, tu aliado de confianza en la U: {}.
+        ",  
         email.user,
         email.Activivdad,
-        email.HoraInicio,
+        dia,
         email.HoraFinal,
-        dia
+        "http://proyectointegrador.playit.plus/"
     );
 
     let emailsend = Message::builder()
