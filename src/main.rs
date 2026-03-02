@@ -65,7 +65,7 @@ fn send_email(email: Json<Email>) -> Result<Json<ApiResponse>, Json<ApiResponse>
         .unwrap();
 
     let credentials = Credentials::new(
-        env::var("Password").expect("env error").to_owned(),
+        env::var("Email").expect("env error").to_owned(),
         env::var("Password").expect("env error")
     );
 
