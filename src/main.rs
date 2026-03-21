@@ -16,6 +16,15 @@ struct Email {
     destinatario: String,
     actividad: String
 }
+
+// Email de token
+struct EmailToken {
+    user: String,
+    token: String,
+    minutos: String,
+    destinatario: String
+}
+
 #[derive(Serialize)]
 #[serde(crate = "rocket::serde")]
 struct ApiResponse {
@@ -54,6 +63,50 @@ fn send_email(email: Json<Email>) -> Result<Json<ApiResponse>, Json<ApiResponse>
         email.0.actividad,
         dia,
         email.0.horaFinal,
+        url
+    );
+
+    let emailsend = Message::builder()
+        .from("UPB Planner recordatorio <upbplanner@gmail.com>".parse().unwrap())
+        .to(email.destinatario.parse().unwrap())
+        .subject("Recordatorio")
+        .header(ContentType::TEXT_PLAIN)
+        .body(messagetosend)
+        .unwrap();
+
+    let credentials = Credentials::new(
+        env::var("Email").expect("env error").to_owned(),
+        env::var("Password").expect("env error")
+    );
+
+    let smtp = SmtpTransport::relay("smtp.gmail.com")
+        .unwrap()
+        .credentials(credentials)
+        .build();
+
+    match smtp.send(&emailsend) {
+        Ok(_) => Ok(Json(ApiResponse {
+            message: "Correo enviado correctamente".into(),
+        })),
+        Err(e) => Err(Json(ApiResponse {
+            message: format!("Error enviando correo: {:?}", e),
+        })),
+    }
+}
+
+#[post("/sendEmailToken", data = "<email>")]
+fn send_email(email: Json<EmailToken>) -> Result<Json<ApiResponse>, Json<ApiResponse>> {
+
+    let url = "http://proyectointegrador.playit.plus/";
+    let messagetosend = format!(
+        "Hola {}, desde la página de UPB Planner le enviamos el token de restablecimiento de la contraseña
+        que usted solicitó: 
+        \n\ {}. 
+        \n\ Este token fue programad@ para vencerse en {} minutos. Recuerda que si el tiempo caduca
+        deberás realizar una solicitud nueva para obetener otro token.",
+        email.0.user,
+        email.0.token,
+        email.0.minutos,
         url
     );
 
