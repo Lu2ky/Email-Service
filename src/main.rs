@@ -95,8 +95,7 @@ fn send_email(email: Json<Email>) -> Result<Json<ApiResponse>, Json<ApiResponse>
 
 #[post("/sendEmailToken", data = "<email>")]
 fn send_email(email: Json<EmailToken>) -> Result<Json<ApiResponse>, Json<ApiResponse>> {
-
-    let url = "http://proyectointegrador.playit.plus/";
+    
     let messagetosend = format!(
         "Hola {}, desde la página de UPB Planner le enviamos el token de restablecimiento de la contraseña
         que usted solicitó: 
@@ -106,7 +105,6 @@ fn send_email(email: Json<EmailToken>) -> Result<Json<ApiResponse>, Json<ApiResp
         email.0.user,
         email.0.token,
         email.0.minutos,
-        url
     );
 
     let emailsend = Message::builder()
