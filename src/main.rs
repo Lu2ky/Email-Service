@@ -10,7 +10,6 @@ use rocket::serde::{Deserialize, Serialize, json::Json};
 #[serde(crate = "rocket::serde")]
 struct Email {
     user: String,
-    horaInicio: String,
     horaFinal: String,
     dia: u8,
     destinatario: String,
@@ -56,7 +55,7 @@ fn send_email(email: Json<Email>) -> Result<Json<ApiResponse>, Json<ApiResponse>
             }))
         }
     };
-    let url = "http://proyectointegrador.playit.plus/";
+    let url = "https://www.upbplanner.online/";
     let messagetosend = format!(
         "Hola {}, desde la página de UPB Planner queremos recordarte que ya casi se acerca la fecha límite de tu actividad: {}, esta fue programad@ con una fecha de vencimiento: {} a las {}. Si necesitas revisarlo en detalle no olvides visitar la página oficial de UPB Planner, tu aliado de confianza en la U: {}.",  
         email.0.user,
