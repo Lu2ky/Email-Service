@@ -1,14 +1,17 @@
-FROM rust:alpine AS builder
-
+FROM rust:latest AS builder
+RUN apt-get update && apt-get install -y \
+    pkg-config \
+    libssl-dev
 WORKDIR /EmailService
-COPY * .
-RUN cargo install
-RUN cargo build
+COPY . .
+RUN cargo build --release
 
-
-FROM alpine:latest AS runner
+FROM debian:bookworm-slim
 WORKDIR /EmailService
-COPY --from=builder /EmailService/target/debug/Email-Service /EmailService/
-RUN touch .env
+COPY --from=builder /EmailService/target/release/email-service .
+RUN apt-get update && apt-get install -y \
+    libssl3 \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 EXPOSE 8000
-CMD [ "./Email-Service" ]
+CMD ["./email-service"]
