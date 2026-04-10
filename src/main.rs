@@ -135,12 +135,50 @@ fn send_email(email: Json<Email>) -> Result<Json<ApiResponse>, Json<ApiResponse>
 #[post("/sendEmailToken", data = "<email>")]
 fn send_email_token(email: Json<EmailToken>) -> Result<Json<ApiResponse>, Json<ApiResponse>> {
     let body = format!(
-        "Hola {}, desde la página de UPB Planner le enviamos el token de restablecimiento \
-         de la contraseña que usted solicitó:\n\n{}\n\nEste token fue programado para vencerse \
-         en {} minutos. Recuerda que si el tiempo caduca deberás realizar una solicitud nueva \
-         para obtener otro token.",
-        email.user, email.token, email.minutos
-    );
+    r#"
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <style>
+            body {{ font-family: Arial, sans-serif; background-color: #ffffff; margin: 0; padding: 0; }}
+            .container {{ max-width: 520px; margin: 0 auto; padding: 40px 30px; }}
+            .logo {{ text-align: center; margin-bottom: 30px; }}
+            .logo img {{ width: 80px; }}
+            .content {{ color: #222222; font-size: 15px; line-height: 1.6; }}
+            .token-box {{ border-left: 4px solid #cc2d7e; background-color: #f9f9f9; padding: 14px 18px; margin: 20px 0; border-radius: 6px; text-align: center; }}
+            .token {{ font-size: 28px; font-weight: bold; letter-spacing: 8px; color: #a020c0; margin: 8px 0; }}
+            .warning {{ font-size: 13px; color: #cc2d7e; margin-top: 6px; }}
+            .footer {{ text-align: center; font-size: 11px; color: #aaaaaa; margin-top: 30px; line-height: 1.6; }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="logo">
+                <img src="https://i.imgur.com/TU_LOGO.png" alt="UPB Logo">
+            </div>
+            <div class="content">
+                <p>Hola <strong>{}</strong>,</p>
+                <p>Te enviamos el token de restablecimiento de contraseña que solicitaste:</p>
+                <div class="token-box">
+                    <p>🔐 <strong>Tu token es:</strong></p>
+                    <p class="token">{}</p>
+                    <p class="warning">⏳ Este token vence en <strong>{} minutos</strong>.</p>
+                </div>
+                <p>Si el tiempo caduca, deberás realizar una nueva solicitud para obtener otro token.</p>
+                <p>Si no solicitaste este cambio, ignora este correo.</p>
+            </div>
+            <div class="footer">
+                <p>Este mensaje fue generado automáticamente por UPB Planner.<br>Por favor no respondas a este correo.</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    "#,
+    email.user,    // Hola {}
+    email.token,   // Token
+    email.minutos  // Minutos
+);
 
     let message = Message::builder()
         .from(
