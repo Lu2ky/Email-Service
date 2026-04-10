@@ -57,44 +57,57 @@ fn send_email(email: Json<Email>) -> Result<Json<ApiResponse>, Json<ApiResponse>
         }
     };
 
-    let url = "http://proyectointegrador.playit.plus/";
+    let url = "https://www.upbplanner.online/";
     let body = format!(
-        r#"<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <style>
-        body {{ font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }}
-        .container {{ max-width: 600px; margin: 30px auto; background: #ffffff; border-radius: 8px; padding: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }}
-        .header {{ background-color: #003087; color: white; padding: 20px; border-radius: 8px 8px 0 0; text-align: center; }}
-        .content {{ padding: 20px 0; color: #333333; }}
-        .actividad {{ background-color: #f0f4ff; border-left: 4px solid #003087; padding: 10px 15px; margin: 15px 0; border-radius: 4px; }}
-        .btn {{ display: inline-block; background-color: #003087; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; margin-top: 20px; }}
-        .footer {{ text-align: center; font-size: 12px; color: #999999; margin-top: 30px; }}
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header"><h2>📅 UPB Planner</h2></div>
-        <div class="content">
-            <p>Hola, <strong>{}</strong></p>
-            <p>Te recordamos que tienes una actividad próxima a vencer:</p>
-            <div class="actividad">
-                <strong>📌 Actividad:</strong> {}<br>
-                <strong>📆 Día:</strong> {}<br>
-                <strong>⏰ Hora límite:</strong> {}
+    r#"
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <style>
+            body {{ font-family: Arial, sans-serif; background-color: #ffffff; margin: 0; padding: 0; }}
+            .container {{ max-width: 520px; margin: 0 auto; padding: 40px 30px; }}
+            .logo {{ text-align: center; margin-bottom: 30px; }}
+            .logo img {{ width: 80px; }}
+            .content {{ color: #222222; font-size: 15px; line-height: 1.6; }}
+            .actividad {{ border-left: 4px solid #cc2d7e; background-color: #f9f9f9; padding: 14px 18px; margin: 20px 0; border-radius: 6px; font-size: 14px; color: #333; }}
+            .actividad p {{ margin: 4px 0; }}
+            .btn-container {{ text-align: center; margin: 30px 0; }}
+            .btn {{ display: inline-block; background: linear-gradient(to right, #cc2d7e, #a020c0); color: white !important; padding: 14px 36px; border-radius: 30px; text-decoration: none; font-size: 15px; font-weight: bold; }}
+            .footer {{ text-align: center; font-size: 11px; color: #aaaaaa; margin-top: 30px; line-height: 1.6; }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="logo">
+                <img src="logo.png" alt="UPB Logo">
             </div>
-            <p>No dejes que se te pase. Revísala en detalle aquí:</p>
-            <a class="btn" href="{}">Ir a UPB Planner</a>
+            <div class="content">
+                <p>Hola <strong>{}</strong>,</p>
+                <p>Te informamos que tienes una actividad próxima a vencer.</p>
+                <div class="actividad">
+                    <p>📌 <strong>Actividad:</strong> {}</p>
+                    <p>📅 <strong>Día:</strong> {}</p>
+                    <p>⏰ <strong>Hora:</strong> {}</p>
+                </div>
+                <p>No dejes que se te pase. Revísala en detalle aquí:</p>
+            </div>
+            <div class="btn-container">
+                <a class="btn" href="{}">Ir a UPB Planner</a>
+            </div>
+            <div class="footer">
+                <p>Este mensaje fue generado automáticamente por UPB Planner.<br>Por favor no respondas a este correo.</p>
+            </div>
         </div>
-        <div class="footer">
-            <p>Este mensaje fue generado automáticamente por UPB Planner.<br>Por favor no respondas a este correo.</p>
-        </div>
-    </div>
-</body>
-</html>"#,
-        email.user, email.actividad, dia, email.hora_final, url
-    );
+    </body>
+    </html>
+    "#,
+    email.0.user,      
+    email.0.actividad, 
+    dia,               
+    email.0.horaFinal, 
+    url                
+);
 
     let message = Message::builder()
         .from(
