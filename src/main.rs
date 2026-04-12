@@ -80,7 +80,7 @@ fn send_email(email: Json<Email>) -> Result<Json<ApiResponse>, Json<ApiResponse>
     <body>
         <div class="container">
             <div class="logo">
-                <img src="logo.png" alt="UPB Logo">
+                <img src="https://www.upbplanner.online/assets/logo-XQtAi6hP.png" alt="UPB Logo">
             </div>
             <div class="content">
                 <p>Hola <strong>{}</strong>,</p>
@@ -155,7 +155,7 @@ fn send_email_token(email: Json<EmailToken>) -> Result<Json<ApiResponse>, Json<A
     <body>
         <div class="container">
             <div class="logo">
-                <img src="https://i.imgur.com/TU_LOGO.png" alt="UPB Logo">
+                <img src="https://www.upbplanner.online/assets/logo-XQtAi6hP.png" alt="UPB Logo">
             </div>
             <div class="content">
                 <p>Hola <strong>{}</strong>,</p>
