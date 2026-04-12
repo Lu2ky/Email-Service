@@ -191,7 +191,7 @@ fn send_email_token(email: Json<EmailToken>) -> Result<Json<ApiResponse>, Json<A
             .parse()
             .map_err(|e| Json(ApiResponse { message: format!("Destinatario inválido: {:?}", e) }))?)
         .subject("Token de recuperación - UPB Planner")
-        .header(ContentType::TEXT_PLAIN)
+        .header(ContentType::TEXT_HTML)
         .body(body)
         .map_err(|e| Json(ApiResponse { message: format!("Error construyendo mensaje: {:?}", e) }))?;
 
