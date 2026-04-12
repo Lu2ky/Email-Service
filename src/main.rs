@@ -11,8 +11,8 @@ use rocket::serde::{json::Json, Deserialize, Serialize};
 #[serde(crate = "rocket::serde")]
 struct Email {
     user: String,
-    hora_inicio: String,   // snake_case: renombrado de horaInicio
-    hora_final: String,    // snake_case: renombrado de horaFinal
+    horaInicio: String,   // snake_case: renombrado de horaInicio
+    horaFinal String,    // snake_case: renombrado de horaFinal
     dia: u8,
     destinatario: String,
     actividad: String,
