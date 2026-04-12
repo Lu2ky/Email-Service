@@ -12,7 +12,7 @@ use rocket::serde::{json::Json, Deserialize, Serialize};
 struct Email {
     user: String,
     horaInicio: String,   // snake_case: renombrado de horaInicio
-    horaFinal String,    // snake_case: renombrado de horaFinal
+    horaFinal: String,    // snake_case: renombrado de horaFinal
     dia: u8,
     destinatario: String,
     actividad: String,
