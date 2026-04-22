@@ -105,7 +105,7 @@ fn send_email(email: Json<Email>) -> Result<Json<ApiResponse>, Json<ApiResponse>
     email.0.user,      
     email.0.actividad, 
     dia,               
-    email.0.horaFinal, 
+    email.0.hora_final, 
     url                
 );
 
